@@ -71,3 +71,14 @@ def find_watched_films(db, chat_id):
         return False
     else:
         return db.films.find({'chat_id': chat_id, 'watched': True})
+
+
+def find_film(db, film_name):
+    if film_name == '':
+        return False
+    film_list = db.films.find_one({'film_name': {'$regex': f'^{film_name.lower().capitalize()}'}})
+    if film_list is None:
+        return False
+    else:
+        film_name = film_list['film_name']
+        return film_name
