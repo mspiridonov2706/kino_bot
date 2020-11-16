@@ -47,16 +47,6 @@ def add_film_in_watched_list(db, chat_id, film_name):
         return False
 
 
-def add_film_in_film_list(db, film_name, chat_id):
-    film = db.filmss.find_one({'chat_id': chat_id})
-    if film:
-        db.films.update_one(
-            {'_id': film['_id']},
-            {'$push': {'film_list': {'film_name': film_name,
-                                     'about_film': {'genre': [], 'url': []},
-                                     'watched': False}}})
-
-
 def find_watching_films(db, chat_id):
     film_list = db.films.find_one({'chat_id': chat_id, 'watched': False})
     if film_list is None:
@@ -82,3 +72,12 @@ def find_film(db, film_name):
     else:
         film_name = film_list['film_name']
         return film_name
+
+
+def delete_film_from_db(db, film_name, chat_id):
+    film = db.films.find_one({'chat_id': chat_id, 'film_name': film_name.lower().capitalize()})
+    if film:
+        db.films.remove({'chat_id': chat_id, 'film_name': film_name.lower().capitalize()})
+        return True
+    else:
+        return False
