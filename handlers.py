@@ -64,10 +64,11 @@ def add_and_delete_film(update, context):
         else:
             context.user_data['film_name'] = film_name
             print(context.user_data)
+            check = False
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      parse_mode='HTML',
                                      text=f'<b>{film_name}</b> добавлен в список\nОпишите ваш фильм:',
-                                     reply_markup=genre_keyboard())
+                                     reply_markup=genre_keyboard(check))
 
     elif "Посмотрели фильм" in text:
         film_name_list = text_list[2:]
