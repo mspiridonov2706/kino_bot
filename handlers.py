@@ -55,8 +55,8 @@ def add_and_watch_film(update, context):
 def add_and_delete_film(update, context):
     text = update.message.text
     text_list = text.split()
-    # context.bot.delete_message(chat_id=update.effective_chat.id, message_id=update.message.message_id)
     if 'film_name' in text:
+        context.bot.delete_message(chat_id=update.effective_chat.id, message_id=update.message.message_id)
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='После @someday_kino_bot напишите название фильма')
     elif "Хочу посмотреть фильм" in text:
@@ -148,20 +148,22 @@ def delete_films(update, context):
 
 def about_films(update, context):
     text = update.message.text
-    text_list = text.split()
-    film_name_list = text_list[3:]
-    film_name = ' '.join(film_name_list).lower().capitalize()
-    about_film = get_about_film(db, update.effective_chat.id, film_name)
     if 'film_name' in text:
+        context.bot.delete_message(chat_id=update.effective_chat.id, message_id=update.message.message_id)
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='После @someday_kino_bot напишите название фильма')
-    elif about_film is None:
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 parse_mode='HTML',
-                                 text=f'Фильм <b>{film_name.capitalize()}</b> не обнаружен')
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 parse_mode='HTML',
-                                 text=f"Название: <b>{film_name.capitalize()}</b>\n"
-                                      f"Тип: <b>{about_film['about_film']['type']}</b>\n"
-                                      f"Жанр: <b>{', '.join(about_film['about_film']['genre'])}</b>")
+        text_list = text.split()
+        film_name_list = text_list[3:]
+        film_name = ' '.join(film_name_list).lower().capitalize()
+        about_film = get_about_film(db, update.effective_chat.id, film_name)
+        if about_film is None:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     parse_mode='HTML',
+                                     text=f'Фильм <b>{film_name.capitalize()}</b> не обнаружен')
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     parse_mode='HTML',
+                                     text=f"Название: <b>{film_name.capitalize()}</b>\n"
+                                          f"Тип: <b>{about_film['about_film']['type']}</b>\n"
+                                          f"Жанр: <b>{', '.join(about_film['about_film']['genre'])}</b>")
