@@ -1,3 +1,4 @@
+from db import db, add_about_film
 from emoji import emojize
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from settings import CHECK_EMOJI, UNCHECK_EMOJI
@@ -23,11 +24,11 @@ def genre_keyboard(check_list):
                     InlineKeyboardButton(f'{check_list[8]} Комедия', callback_data='комедия')
                 ],
                 [
-                    InlineKeyboardButton(f'{check_list[9]} Приключения', callback_data='приключения'),
+                    InlineKeyboardButton(f'{check_list[9]} Приключение', callback_data='приключение'),
                     InlineKeyboardButton(f'{check_list[10]} Фантастика', callback_data='фантастика')
                 ]
             ]
-    reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
+    reply_markup = InlineKeyboardMarkup(keyboard)
     return reply_markup
 
 
@@ -41,71 +42,77 @@ def about_film(update, context):
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_type_about_film(check_number, check_list, context.user_data, query.data)
-        print(context.user_data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'мультфильм':
         check_number = 1
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_type_about_film(check_number, check_list, context.user_data, query.data)
-        print(context.user_data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'сериал':
         check_number = 2
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_type_about_film(check_number, check_list, context.user_data, query.data)
-        print(context.user_data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'ужасы':
         check_number = 3
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
-        print(context.user_data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'драма':
         check_number = 4
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
-        print(context.user_data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'триллер':
         check_number = 5
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'детектив':
         check_number = 6
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'экшон':
         check_number = 7
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'комедия':
         check_number = 8
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
-    elif query.data == 'приключения':
+        add_about_film(db, update.effective_chat.id, context.user_data)
+    elif query.data == 'приключение':
         check_number = 9
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'фантастика':
         check_number = 10
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
 
 
 def check_or_uncheck_choice(n, context):
@@ -127,7 +134,7 @@ def check_or_uncheck_choice(n, context):
             context.user_data['check_emoji'][2] = uncheck_list[2]
         elif n == 2:
             context.user_data['check_emoji'][0] = uncheck_list[0]
-            context.user_data['check_emoji'][1] = uncheck_list[1]     
+            context.user_data['check_emoji'][1] = uncheck_list[1]
         context.user_data['check_emoji'][n] = check_list[n]
         check_list = context.user_data['check_emoji']
     return check_list

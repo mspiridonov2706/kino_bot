@@ -1,13 +1,14 @@
 import logging
 from callback_query import genre_keyboard
 from db import (db, add_film_in_list, add_film_in_watched_list, find_watching_films,
-                find_watched_films, find_film, delete_film_from_db)
+                find_watched_films, find_film, delete_film_from_db, get_about_film)
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 from settings import HELP
 
 
 POPCORN_ICON = 'https://i.ibb.co/Sy0xcXW/popcorn.png'
 MOVIE_ICON = 'https://i.ibb.co/HF3Kzq3/movie.png'
+INFO_ICON = 'https://i.ibb.co/GVf0Hsv/movie-tickets.png'
 
 
 def greet_user(update, context):
@@ -33,15 +34,20 @@ def add_and_watch_film(update, context):
 
     results = [
         InlineQueryResultArticle(
-            id=True, title="Добавить фильм:",
+            id='1', title="Добавить фильм:",
             description=f'{query}',
             input_message_content=InputTextMessageContent(message_text=f'Хочу посмотреть фильм {query}'),
             thumb_url=POPCORN_ICON, thumb_width=48, thumb_height=48),
         InlineQueryResultArticle(
-            id=False, title="Посмотреть фильм:",
+            id='2', title="Посмотреть фильм:",
             description=f'{film}',
             input_message_content=InputTextMessageContent(message_text=f'Посмотрели фильм {film}'),
-            thumb_url=MOVIE_ICON, thumb_width=48, thumb_height=48
+            thumb_url=MOVIE_ICON, thumb_width=48, thumb_height=48),
+        InlineQueryResultArticle(
+            id='3', title="О фильме:",
+            description=f'{film}',
+            input_message_content=InputTextMessageContent(message_text=f'Расскажи о фильме {film}'),
+            thumb_url=INFO_ICON, thumb_width=48, thumb_height=48
         )]
     update.inline_query.answer(results, cache_time=1)
 
@@ -49,7 +55,7 @@ def add_and_watch_film(update, context):
 def add_and_delete_film(update, context):
     text = update.message.text
     text_list = text.split()
-    #context.bot.delete_message(chat_id=update.effective_chat.id, message_id=update.message.message_id)
+    # context.bot.delete_message(chat_id=update.effective_chat.id, message_id=update.message.message_id)
     if 'film_name' in text:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='После @someday_kino_bot напишите название фильма')
@@ -63,7 +69,6 @@ def add_and_delete_film(update, context):
                                      text=f'<b>{film_name}</b> уже есть в списке')
         else:
             context.user_data['film_name'] = film_name
-            print(context.user_data)
             check = False
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      parse_mode='HTML',
@@ -109,7 +114,7 @@ def call_film_list(update, context):
 
 
 def call_watched_film_list(update, context):
-    logging.info('Вызван /list')
+    logging.info('Вызван /watched')
 
     films = find_watched_films(db, update.effective_chat.id)
     film_list = []
@@ -134,8 +139,26 @@ def delete_films(update, context):
     if delete_film is True:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
-                                 text=f'Фильм <b>{film_name}</b> удалён из списков')
+                                 text=f'Фильм <b>{film_name.lower().capitalize()}</b> удалён из списков')
     elif delete_film is False:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
-                                 text=f'Фильм <b>{film_name}</b> не обнаружен')
+                                 text=f'Фильм <b>{film_name.lower().capitalize()}</b> не обнаружен')
+
+
+def about_films(update, context):
+    text = update.message.text
+    text_list = text.split()
+    film_name_list = text_list[3:]
+    film_name = ' '.join(film_name_list).lower().capitalize()
+    about_film = get_about_film(db, update.effective_chat.id, film_name)
+    if about_film is None:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 parse_mode='HTML',
+                                 text=f'Фильм <b>{film_name.capitalize()}</b> не обнаружен')
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 parse_mode='HTML',
+                                 text=f"Название: <b>{film_name.capitalize()}</b>\n"
+                                      f"Тип: <b>{about_film['about_film']['type']}</b>\n"
+                                      f"Жанр: <b>{', '.join(about_film['about_film']['genre'])}</b>")

@@ -5,25 +5,13 @@ client = MongoClient(settings.MONGO_LINK)
 db = client[settings.MONGO_DB]
 
 
-def create_or_get_chat_id(db, chat_id):
-    chat = db.films.find_one({'chat_id': chat_id})
-    if not chat:
-        chat = {
-            'chat_id': chat_id
-        }
-        db.films.insert_one(chat)
-        return chat['chat_id']
-    else:
-        return chat['chat_id']
-
-
 def add_film_in_list(db, chat_id, film_name):
     film = db.films.find_one({'chat_id': chat_id, 'film_name': film_name})
     if not film:
         film = {
             'chat_id': chat_id,
             'film_name': film_name,
-            'about_film': {'genre': [], 'url': []},
+            'about_film': {'type': '', 'genre': [], 'url': ''},
             'watched': False
         }
         db.films.insert_one(film)
@@ -81,3 +69,39 @@ def delete_film_from_db(db, film_name, chat_id):
         return True
     else:
         return False
+
+
+def add_about_film(db, chat_id, film_data):
+    film = db.films.find_one({'chat_id': chat_id, 'film_name': film_data['film_name']})
+    if film:
+        try:
+            if film_data['type'] and film_data['genre']:
+                db.films.update_one(
+                    {'_id': film['_id']},
+                    {'$set': {'about_film': {'type': film_data['type'], 'genre': film_data['genre']}}}
+                )
+                return 'done'
+        except KeyError:
+            pass
+
+        try:
+            if film_data['type']:
+                db.films.update_one(
+                    {'_id': film['_id']},
+                    {'$set': {'about_film': {'type': film_data['type']}}}
+                )
+        except KeyError:
+            pass
+
+        try:
+            if film_data['genre']:
+                db.films.update_one(
+                    {'_id': film['_id']},
+                    {'$set': {'about_film': {'genre': film_data['genre']}}}
+                )
+        except KeyError:
+            pass
+
+
+def get_about_film(db, chat_id, film_name):
+    return db.films.find_one({'chat_id': chat_id, 'film_name': film_name.lower().capitalize()})

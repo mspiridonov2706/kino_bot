@@ -2,7 +2,7 @@ import logging
 import settings
 
 from callback_query import about_film
-from handlers import (greet_user, call_film_list, call_watched_film_list,
+from handlers import (greet_user, call_film_list, call_watched_film_list, about_films,
                       add_and_watch_film, add_and_delete_film, help_user, delete_films)
 from telegram.ext import (Updater, CommandHandler, InlineQueryHandler, Filters, MessageHandler, CallbackQueryHandler)
 
@@ -25,7 +25,8 @@ def main():
     dp.add_handler(CommandHandler('list', call_film_list))
     dp.add_handler(CommandHandler('watched', call_watched_film_list))
     dp.add_handler(CommandHandler('del', delete_films))
-    dp.add_handler(MessageHandler(Filters.regex('^(Хочу посмотреть)|(Посмотрели фильм)|(Вы выбрали фильм)'), add_and_delete_film))
+    dp.add_handler(MessageHandler(Filters.regex('^(Хочу посмотреть)|(Посмотрели фильм)'), add_and_delete_film))
+    dp.add_handler(MessageHandler(Filters.regex('^(Расскажи о фильме)'), about_films))
     logging.info("Бот стартовал")
     mybot.start_polling()
     mybot.idle()
