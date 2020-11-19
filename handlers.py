@@ -152,7 +152,10 @@ def about_films(update, context):
     film_name_list = text_list[3:]
     film_name = ' '.join(film_name_list).lower().capitalize()
     about_film = get_about_film(db, update.effective_chat.id, film_name)
-    if about_film is None:
+    if 'film_name' in text:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text='После @someday_kino_bot напишите название фильма')
+    elif about_film is None:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
                                  text=f'Фильм <b>{film_name.capitalize()}</b> не обнаружен')
