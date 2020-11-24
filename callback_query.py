@@ -1,4 +1,4 @@
-from db import db, add_about_film
+from db import db, add_about_film, change_link_information
 from emoji import emojize
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from settings import CHECK_EMOJI, UNCHECK_EMOJI
@@ -33,7 +33,6 @@ def genre_keyboard(check_list):
 
 
 def about_film(update, context):
-
     update.callback_query.answer()
     query = update.callback_query
     if query.data == 'фильм':
@@ -118,9 +117,7 @@ def about_film(update, context):
 def check_or_uncheck_choice(n, context):
     uncheck_list = get_uncheck_list()
     check_list = get_check_list()
-    try:
-        context.user_data['check_emoji']
-    except KeyError:
+    if context.user_data['check_emoji'] is None:
         context.user_data['check_emoji'] = uncheck_list
     if context.user_data['check_emoji'][n] == check_list[n]:
         context.user_data['check_emoji'][n] = uncheck_list[n]
@@ -150,9 +147,7 @@ def add_information_type_about_film(check_number, check_list, user_data, query_d
 
 
 def add_information_genre_about_film(user_data, query_data):
-    try:
-        user_data['genre']
-    except KeyError:
+    if user_data['genre'] is None:
         user_data['genre'] = []
     if query_data in user_data['genre']:
         user_data['genre'].remove(query_data)
@@ -176,3 +171,32 @@ def get_check_list():
         check = emojize(check, use_aliases=True)
         check_list.append(check)
     return check_list
+
+
+def link_information_keyboard():
+    keyboard = [
+                [
+                    InlineKeyboardButton('Да', callback_data='yes'),
+                    InlineKeyboardButton('Нет', callback_data='no')
+                ]
+            ]
+    reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+    return reply_markup
+
+
+def edit_film_link(update, context):
+    update.callback_query.answer()
+    query = update.callback_query
+    if query.data == 'yes':
+        change_link_information(db, update.effective_chat.id, context.user_data['film_name'], query.data)
+        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+                                           inline_message_id=query.id, reply_markup=None)
+        context.bot.delete_message(chat_id=query.message.chat.id, message_id=query.message.message_id)
+    elif query.data == 'no':
+        change_link_information(db, update.effective_chat.id, context.user_data['film_name'], query.data)
+        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+                                           inline_message_id=query.id, reply_markup=None)
+        context.bot.delete_message(chat_id=query.message.chat.id, message_id=query.message.message_id)
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 parse_mode='HTML',
+                                 text='Пожалуйста проверьте новую ссылку!')

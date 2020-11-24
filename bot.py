@@ -1,7 +1,7 @@
 import logging
 import settings
 
-from callback_query import about_film
+from callback_query import about_film, edit_film_link
 from handlers import (greet_user, call_film_list, call_watched_film_list, about_films,
                       add_and_watch_film, add_and_delete_film, help_user, delete_films)
 from telegram.ext import (Updater, CommandHandler, InlineQueryHandler, Filters, MessageHandler, CallbackQueryHandler)
@@ -19,7 +19,9 @@ def main():
 
     dp = mybot.dispatcher
     dp.add_handler(InlineQueryHandler(add_and_watch_film, pass_chat_data=True))
-    dp.add_handler(CallbackQueryHandler(about_film))
+    dp.add_handler(CallbackQueryHandler(about_film, pattern='^(фильм)|(мультфильм)|(сериал)|(ужасы)|(драма)|(триллер)|'
+                                                            '(детектив)|(экшон)|(комедия)|(приключение)|(фантастика)'))
+    dp.add_handler(CallbackQueryHandler(edit_film_link, pattern='^(yes)|(no)'))
     dp.add_handler(CommandHandler('start', greet_user))
     dp.add_handler(CommandHandler('help', help_user))
     dp.add_handler(CommandHandler('list', call_film_list))
