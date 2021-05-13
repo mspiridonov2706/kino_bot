@@ -15,7 +15,7 @@ logging.basicConfig(filename='bot.log', filemode='w', format='%(asctime)s - %(me
 
 
 def main():
-    mybot = Updater(settings.API_KEY, use_context=True, request_kwargs=PROXY)
+    mybot = Updater(settings.API_KEY, use_context=True)
 
     dp = mybot.dispatcher
     dp.add_handler(InlineQueryHandler(add_and_watch_film, pass_chat_data=True))
