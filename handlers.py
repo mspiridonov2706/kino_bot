@@ -4,6 +4,7 @@ from db import (db, add_film_in_list, add_film_in_watched_list, find_watching_fi
                 find_watched_films, find_film, delete_film_from_db, get_about_film)
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 from settings import HELP
+from utils import search_kinopoisk
 
 
 POPCORN_ICON = 'https://i.ibb.co/Sy0xcXW/popcorn.png'
@@ -73,9 +74,14 @@ def add_and_delete_film(update, context):
         else:
             context.user_data['film_name'] = film_name
             check = False
+            link_number = 0
+            link = search_kinopoisk(context.user_data['film_name'], link_number)
+            context.user_data['link'] = link
+            context.user_data['link_number'] = link_number
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      parse_mode='HTML',
-                                     text=f'<b>{film_name}</b> добавлен в список\nОпишите ваш фильм:',
+                                     text=f'<b>{film_name}</b> добавлен в список для просмотра. '
+                                          'Пожалуйста опишите ваш фильм.',
                                      reply_markup=genre_keyboard(check))
 
     elif "Посмотрели фильм" in text:

@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import settings
 from utils import search_kinopoisk
 
+
 client = MongoClient(settings.MONGO_LINK)
 db = client[settings.MONGO_DB]
 
@@ -74,8 +75,6 @@ def delete_film_from_db(db, film_name, chat_id):
 
 def add_about_film(db, chat_id, film_data):
     film = db.films.find_one({'chat_id': chat_id, 'film_name': film_data['film_name'].lower()})
-    link_number = 0
-    link = search_kinopoisk(film_data['film_name'], link_number)
     if film:
         try:
             if film_data['type'] and film_data['genre']:
@@ -83,8 +82,8 @@ def add_about_film(db, chat_id, film_data):
                     {'_id': film['_id']},
                     {'$set': {'about_film': {'type': film_data['type'],
                                              'genre': film_data['genre'],
-                                             'url': {'link': link,
-                                                     'link_number': link_number,
+                                             'url': {'link': film_data['link'],
+                                                     'link_number': film_data['link_number'],
                                                      'define': 'undefinied'}}}}
                 )
                 return 'done'
@@ -97,8 +96,8 @@ def add_about_film(db, chat_id, film_data):
                     {'_id': film['_id']},
                     {'$set': {'about_film': {'type': film_data['type'],
                                              'genre': 'не задано',
-                                             'url': {'link': link,
-                                                     'link_number': link_number,
+                                             'url': {'link': film_data['link'],
+                                                     'link_number': film_data['link_number'],
                                                      'define': 'undefinied'}}}}
                 )
         except KeyError:
@@ -110,8 +109,8 @@ def add_about_film(db, chat_id, film_data):
                     {'_id': film['_id']},
                     {'$set': {'about_film': {'type': 'не задано',
                                              'genre': 'не задано',
-                                             'url': {'link': link,
-                                                     'link_number': link_number,
+                                             'url': {'link': film_data['link'],
+                                                     'link_number': film_data['link_number'],
                                                      'define': 'undefinied'}}}}
                 )
         except KeyError:
