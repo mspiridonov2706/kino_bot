@@ -35,7 +35,6 @@ def genre_keyboard(check_list):
 def about_film(update, context):
     update.callback_query.answer()
     query = update.callback_query
-    print(context.user_data)
     if query.data == 'фильм':
         check_number = 0
         check_list = check_or_uncheck_choice(check_number, context)
