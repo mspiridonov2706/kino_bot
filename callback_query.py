@@ -10,22 +10,29 @@ def genre_keyboard(check_list):
     keyboard = [
                 [
                     InlineKeyboardButton(f'{check_list[0]} Фильм', callback_data='фильм'),
-                    InlineKeyboardButton(f'{check_list[1]} Мультфильм', callback_data='мультфильм'),
                     InlineKeyboardButton(f'{check_list[2]} Сериал', callback_data='сериал')
                 ],
                 [
-                    InlineKeyboardButton(f'{check_list[3]} Ужасы', callback_data='ужасы'),
-                    InlineKeyboardButton(f'{check_list[4]} Драма', callback_data='драма'),
-                    InlineKeyboardButton(f'{check_list[5]} Триллер', callback_data='триллер')
+                    InlineKeyboardButton(f'{check_list[1]} Анимация', callback_data='анимация'),
                 ],
                 [
-                    InlineKeyboardButton(f'{check_list[6]} Детектив', callback_data='детектив'),
-                    InlineKeyboardButton(f'{check_list[7]} Экшон', callback_data='экшон'),
-                    InlineKeyboardButton(f'{check_list[8]} Комедия', callback_data='комедия')
+                    InlineKeyboardButton(f'{check_list[7]} Экшен', callback_data='экшен'),
+                    InlineKeyboardButton(f'{check_list[4]} Драма', callback_data='драма')
                 ],
                 [
-                    InlineKeyboardButton(f'{check_list[9]} Приключение', callback_data='приключение'),
+                    InlineKeyboardButton(f'{check_list[5]} Триллер', callback_data='триллер'),
+                    InlineKeyboardButton(f'{check_list[6]} Детектив', callback_data='детектив')
+                ],
+                [
+                    InlineKeyboardButton(f'{check_list[11]} Фэнтези', callback_data='фэнтези'),
                     InlineKeyboardButton(f'{check_list[10]} Фантастика', callback_data='фантастика')
+                ],
+                [
+                    InlineKeyboardButton(f'{check_list[3]} Ужасы', callback_data='ужасы'),
+                    InlineKeyboardButton(f'{check_list[8]} Комедия', callback_data='комедия'),
+                ],
+                [
+                    InlineKeyboardButton(f'{check_list[9]} Приключение', callback_data='приключение')
                 ]
             ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -42,7 +49,7 @@ def about_film(update, context):
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_type_about_film(check_number, check_list, context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
-    elif query.data == 'мультфильм':
+    elif query.data == 'анимация':
         check_number = 1
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
@@ -84,7 +91,7 @@ def about_film(update, context):
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
-    elif query.data == 'экшон':
+    elif query.data == 'экшен':
         check_number = 7
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
@@ -107,6 +114,13 @@ def about_film(update, context):
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'фантастика':
         check_number = 10
+        check_list = check_or_uncheck_choice(check_number, context)
+        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+                                           inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
+        add_information_genre_about_film(context.user_data, query.data)
+        add_about_film(db, update.effective_chat.id, context.user_data)
+    elif query.data == 'фэнтези':
+        check_number = 11
         check_list = check_or_uncheck_choice(check_number, context)
         context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
