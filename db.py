@@ -140,3 +140,13 @@ def change_link_information(db, chat_id, film_name, data):
             {'_id': film['_id']},
             {'$set': {'about_film.url.link': link}}
         )
+
+
+def call_showing_film_from_db(db, chat_id, film_type):
+    type_list = ['фильм', 'сериал', 'анимация']
+    if film_type in type_list:
+        return db.films.find({'chat_id': chat_id,
+                              'about_film.type': film_type})
+    else:
+        return db.films.find({'chat_id': chat_id,
+                              'about_film.genre': film_type})
