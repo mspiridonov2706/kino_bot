@@ -119,7 +119,8 @@ def call_film_list(update, context):
         film_list_string = '\n'.join(film_list)
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
-                                 text=f'Список фильмов, которые вы ещё <b>не посмотрели:</b>\n{film_list_string}')
+                                 text=f'Список фильмов, которые вы ещё <b>не посмотрели:</b>\n'
+                                      f'{film_list_string.lower().capitalize()}')
 
 
 def call_watched_film_list(update, context):
@@ -137,7 +138,8 @@ def call_watched_film_list(update, context):
         film_list_string = '\n'.join(film_list)
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
-                                 text=f'Список фильмов, которые вы <b>уже посмотрели:</b>\n{film_list_string}')
+                                 text=f'Список фильмов, которые вы <b>уже посмотрели:</b>\n'
+                                      f'{film_list_string.lower().capitalize()}')
 
 
 def delete_films(update, context):
