@@ -4,7 +4,7 @@ from db import (db, add_film_in_list, add_film_in_watched_list, find_watching_fi
                 find_watched_films, find_film, delete_film_from_db, get_about_film)
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 from settings import HELP
-from utils import search_kinopoisk
+from utils import search_kinopoisk, show_keyboard
 
 
 POPCORN_ICON = 'https://i.ibb.co/Sy0xcXW/popcorn.png'
@@ -116,11 +116,11 @@ def call_film_list(update, context):
         film_list = []
         for film in films:
             film_list.append('- ' + film['film_name'])
-        film_list_string = '\n'.join(film_list)
+        film_list_string = '\n'.join(film_list).lower().capitalize()
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
                                  text=f'Список фильмов, которые вы ещё <b>не посмотрели:</b>\n'
-                                      f'{film_list_string.lower().capitalize()}')
+                                      f'{film_list_string}')
 
 
 def call_watched_film_list(update, context):
@@ -135,11 +135,11 @@ def call_watched_film_list(update, context):
     else:
         for film in films:
             film_list.append('- ' + film['film_name'])
-        film_list_string = '\n'.join(film_list)
+        film_list_string = '\n'.join(film_list).lower().capitalize()
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
                                  text=f'Список фильмов, которые вы <b>уже посмотрели:</b>\n'
-                                      f'{film_list_string.lower().capitalize()}')
+                                      f'{film_list_string}')
 
 
 def delete_films(update, context):
@@ -198,3 +198,10 @@ def about_films(update, context):
                                      parse_mode='HTML',
                                      text='Правильно ли указана ссылка на фильм?',
                                      reply_markup=link_information_keyboard())
+
+
+def show_films(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             parse_mode='HTML',
+                             text='Выберите категорию или жанр:',
+                             reply_markup=show_keyboard())

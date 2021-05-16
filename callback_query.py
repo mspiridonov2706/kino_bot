@@ -1,4 +1,4 @@
-from db import db, add_about_film, change_link_information
+from db import db, add_about_film, change_link_information, call_showing_film_from_db
 from emoji import emojize
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from settings import CHECK_EMOJI, UNCHECK_EMOJI
@@ -214,3 +214,49 @@ def edit_film_link(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
                                  text='Пожалуйста проверьте новую ссылку!')
+
+
+def call_show_film(update, context):
+    update.callback_query.answer()
+    query = update.callback_query
+    if query.data == 'show_фильм':
+        film_type = 'фильм'
+    elif query.data == 'show_сериал':
+        film_type = 'сериал'
+    elif query.data == 'show_анимация':
+        film_type = 'анимация'
+    elif query.data == 'show_экшен':
+        film_type = 'экшен'
+    elif query.data == 'show_драма':
+        film_type = 'драма'
+    elif query.data == 'show_триллер':
+        film_type = 'триллер'
+    elif query.data == 'show_детектив':
+        film_type = 'детектив'
+    elif query.data == 'show_фэнтези':
+        film_type = 'фэнтези'
+    elif query.data == 'show_фантастика':
+        film_type = 'фантастика'
+    elif query.data == 'show_ужасы':
+        film_type = 'ужасы'
+    elif query.data == 'show_комедия':
+        film_type = 'комедия'
+    elif query.data == 'show_приключение':
+        film_type = 'приключение'
+    
+    films = call_showing_film_from_db(db, update.effective_chat.id, film_type)
+    film_list = []
+
+    for film in films:
+        film_list.append('- ' + film['film_name'])
+    print(film_list)
+    if film_list == []:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 parse_mode='HTML',
+                                 text='Не найдено')
+    else:
+        film_list_string = '\n'.join(film_list)
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 parse_mode='HTML',
+                                 text=f'Список фильмов:\n'
+                                 f'{film_list_string}')
