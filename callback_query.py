@@ -249,7 +249,6 @@ def call_show_film(update, context):
 
     for film in films:
         film_list.append('- ' + film['film_name'])
-    print(film_list)
     if film_list == []:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
