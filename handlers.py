@@ -116,6 +116,7 @@ def call_film_list(update, context):
         film_list = []
         for film in films:
             film_list.append('- ' + film['film_name'])
+        film_list.sort()
         film_list_string = '\n'.join(film_list).lower().capitalize()
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
@@ -135,6 +136,7 @@ def call_watched_film_list(update, context):
     else:
         for film in films:
             film_list.append('- ' + film['film_name'])
+        film_list.sort()
         film_list_string = '\n'.join(film_list).lower().capitalize()
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
