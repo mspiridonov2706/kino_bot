@@ -1,9 +1,10 @@
 from pymongo import MongoClient
+import certifi
 import settings
 from utils import search_kinopoisk
 
 
-client = MongoClient(settings.MONGO_LINK)
+client = MongoClient(settings.MONGO_LINK, tlsCAFile=certifi.where())
 db = client[settings.MONGO_DB]
 
 

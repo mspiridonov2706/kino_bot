@@ -132,3 +132,6 @@ dmypy.json
 settings.py
 .vscode/
 .DS_Store
+Dockerfile
+.dockerignore
+*.tar
