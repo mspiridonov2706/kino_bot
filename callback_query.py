@@ -2,6 +2,7 @@ from db import db, add_about_film, change_link_information, call_showing_film_fr
 from emoji import emojize
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from settings import CHECK_EMOJI, UNCHECK_EMOJI
+from utils import send_message, delete_message, messages
 
 
 def genre_keyboard(check_list):
@@ -33,7 +34,10 @@ def genre_keyboard(check_list):
                 ],
                 [
                     InlineKeyboardButton(f'{check_list[9]} Приключение', callback_data='приключение')
-                ]
+                ],
+                [
+                    InlineKeyboardButton(f'Выйти', callback_data='выйти')
+                ],
             ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     return reply_markup
@@ -42,90 +46,94 @@ def genre_keyboard(check_list):
 def about_film(update, context):
     update.callback_query.answer()
     query = update.callback_query
+    chat_id = query.message.chat.id
+    message_id = query.message.message_id
     if query.data == 'фильм':
         check_number = 0
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_type_about_film(check_number, check_list, context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'анимация':
         check_number = 1
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_type_about_film(check_number, check_list, context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'сериал':
         check_number = 2
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_type_about_film(check_number, check_list, context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'ужасы':
         check_number = 3
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'драма':
         check_number = 4
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'триллер':
         check_number = 5
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'детектив':
         check_number = 6
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'экшен':
         check_number = 7
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'комедия':
         check_number = 8
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'приключение':
         check_number = 9
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'фантастика':
         check_number = 10
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
     elif query.data == 'фэнтези':
         check_number = 11
         check_list = check_or_uncheck_choice(check_number, context)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=genre_keyboard(check_list))
         add_information_genre_about_film(context.user_data, query.data)
         add_about_film(db, update.effective_chat.id, context.user_data)
+    elif query.data == 'выйти':
+        delete_message(context, chat_id, message_id)
 
 
 def check_or_uncheck_choice(n, context):
@@ -201,16 +209,18 @@ def link_information_keyboard():
 def edit_film_link(update, context):
     update.callback_query.answer()
     query = update.callback_query
+    chat_id = query.message.chat.id
+    message_id = query.message.message_id
     if query.data == 'yes':
         change_link_information(db, update.effective_chat.id, context.user_data['film_name'], query.data)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=None)
-        context.bot.delete_message(chat_id=query.message.chat.id, message_id=query.message.message_id)
+        delete_message(context, chat_id, message_id)
     elif query.data == 'no':
         change_link_information(db, update.effective_chat.id, context.user_data['film_name'], query.data)
-        context.bot.editMessageReplyMarkup(chat_id=query.message.chat.id, message_id=query.message.message_id,
+        context.bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id,
                                            inline_message_id=query.id, reply_markup=None)
-        context.bot.delete_message(chat_id=query.message.chat.id, message_id=query.message.message_id)
+        delete_message(context, chat_id=chat_id, message_id=message_id)
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  parse_mode='HTML',
                                  text='Пожалуйста проверьте новую ссылку!')
@@ -219,44 +229,39 @@ def edit_film_link(update, context):
 def call_show_film(update, context):
     update.callback_query.answer()
     query = update.callback_query
-    if query.data == 'show_фильм':
-        film_type = 'фильм'
-    elif query.data == 'show_сериал':
-        film_type = 'сериал'
-    elif query.data == 'show_анимация':
-        film_type = 'анимация'
-    elif query.data == 'show_экшен':
-        film_type = 'экшен'
-    elif query.data == 'show_драма':
-        film_type = 'драма'
-    elif query.data == 'show_триллер':
-        film_type = 'триллер'
-    elif query.data == 'show_детектив':
-        film_type = 'детектив'
-    elif query.data == 'show_фэнтези':
-        film_type = 'фэнтези'
-    elif query.data == 'show_фантастика':
-        film_type = 'фантастика'
-    elif query.data == 'show_ужасы':
-        film_type = 'ужасы'
-    elif query.data == 'show_комедия':
-        film_type = 'комедия'
-    elif query.data == 'show_приключение':
-        film_type = 'приключение'
+    chat_id = update.effective_chat.id
+
+    film_types = {
+        'show_фильм': 'фильм',
+        'show_сериал': 'сериал',
+        'show_анимация': 'анимация',
+        'show_экшен': 'экшен',
+        'show_драма': 'драма',
+        'show_триллер': 'триллер',
+        'show_детектив': 'детектив',
+        'show_фэнтези': 'фэнтези',
+        'show_фантастика': 'фантастика',
+        'show_ужасы': 'ужасы',
+        'show_комедия': 'комедия',
+        'show_приключение': 'приключение'
+    }
+
+    film_type = film_types[query.data]
     
-    films = call_showing_film_from_db(db, update.effective_chat.id, film_type)
+    films = call_showing_film_from_db(db, chat_id, film_type)
     film_list = []
+
+    if messages.PREVIOS_MESSAGE:
+        delete_message(context, chat_id, messages.PREVIOS_MESSAGE)
 
     for film in films:
         film_list.append('- ' + film['film_name'])
     if film_list == []:
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 parse_mode='HTML',
-                                 text='Не найдено')
+        message = send_message(update, context, 'Не найдено')
     else:
         film_list.sort()
         film_list_string = '\n'.join(film_list)
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 parse_mode='HTML',
-                                 text=f'Список фильмов:\n'
-                                 f'{film_list_string}')
+        text_message = f'Список фильмов:\n {film_list_string}'
+        message = send_message(update, context, text_message)
+
+    messages.PREVIOS_MESSAGE = message['message_id']

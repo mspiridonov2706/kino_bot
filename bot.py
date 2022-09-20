@@ -22,7 +22,7 @@ def main():
     dp.add_handler(InlineQueryHandler(add_and_watch_film, pass_chat_data=True))
     dp.add_handler(CallbackQueryHandler(about_film, pattern='^(фильм)|(анимация)|(сериал)|(ужасы)|(драма)|(триллер)|'
                                                             '(детектив)|(экшен)|(комедия)|(приключение)|(фантастика)|'
-                                                            '(фэнтези)'))
+                                                            '(фэнтези)|(выйти)'))
     dp.add_handler(CallbackQueryHandler(call_show_film, pattern='^(show_фильм)|(show_анимация)|(show_сериал)|'
                                                                 '(show_ужасы)|(show_драма)|(show_триллер)|'
                                                                 '(show_детектив)|(show_экшен)|(show_комедия)|'
@@ -36,6 +36,7 @@ def main():
     dp.add_handler(CommandHandler('show', show_films))
     dp.add_handler(MessageHandler(Filters.regex('^(Хочу посмотреть)|(Посмотрели фильм)'), add_and_delete_film))
     dp.add_handler(MessageHandler(Filters.regex('^(Расскажи о фильме)'), about_films))
+    dp.add_handler(MessageHandler(Filters.regex('^(Удалить фильм)'), delete_films))
     logging.info("Бот стартовал")
     mybot.start_polling()
     mybot.idle()

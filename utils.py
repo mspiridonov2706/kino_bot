@@ -44,3 +44,21 @@ def show_keyboard():
             ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     return reply_markup
+
+def send_message(update, context, message, reply_markup=None):
+    message = context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        parse_mode='HTML',
+        text=message,
+        reply_markup=reply_markup,
+    )
+    return message
+
+def delete_message(context, chat_id, message_id):
+    context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+
+
+class Message:
+    PREVIOS_MESSAGE = None
+
+messages = Message()

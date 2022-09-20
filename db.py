@@ -57,7 +57,7 @@ def find_watched_films(db, chat_id):
 def find_film(db, film_name):
     if film_name == '':
         return False
-    film_list = db.films.find_one({'film_name': {'$regex': f'^{film_name.lower()}'}})
+    film_list = db.films.find_one({'film_name': {'$regex': f'^{film_name}'}})
     if film_list is None:
         return False
     else:
@@ -66,12 +66,11 @@ def find_film(db, film_name):
 
 
 def delete_film_from_db(db, film_name, chat_id):
-    film = db.films.find_one({'chat_id': chat_id, 'film_name': film_name.lower()})
+    film = db.films.find_one({'chat_id': chat_id, 'film_name': film_name})
     if film:
-        db.films.remove({'chat_id': chat_id, 'film_name': film_name.lower()})
+        db.films.delete_one({'chat_id': chat_id, 'film_name': film_name})
         return True
-    else:
-        return False
+    return False
 
 
 def add_about_film(db, chat_id, film_data):
